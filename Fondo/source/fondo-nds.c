@@ -23,18 +23,18 @@
 #include <nds.h>
 
 #include "fondo.h"
+#include "fondo2.h"
 
 int main () {
 	powerOn (POWER_ALL_2D);
 	
 	lcdMainOnBottom ();
 	/* Asignar los bancos de memoria vram */
-	vramSetPrimaryBanks (VRAM_A_MAIN_BG, VRAM_B_MAIN_BG, VRAM_C_LCD, VRAM_D_LCD);
+	vramSetPrimaryBanks (VRAM_A_MAIN_BG, VRAM_B_MAIN_BG, VRAM_C_SUB_BG, VRAM_D_LCD);
 	
 	/* Activar modos de video */
 	videoSetMode (MODE_5_2D | DISPLAY_BG3_ACTIVE);
-	
-	//videoSetModeSub (MODE_5_2D | DISPLAY_BG3_ACTIVE);
+	videoSetModeSub (MODE_5_2D | DISPLAY_BG3_ACTIVE);
 	
 	/* Activar el fondo en el motor principal */
 	REG_BG3CNT = BG_BMP16_256x256 |
@@ -49,13 +49,24 @@ int main () {
 	REG_BG3X = 0;
 	REG_BG3Y = 0;
 	
+	REG_BG3CNT_SUB = BG_BMP16_256x256 |
+	                 BG_BMP_BASE (16) |
+	                 BG_PRIORITY (3);
+	
+	REG_BG3PA_SUB = 1 << 8;
+	REG_BG3PB_SUB = 0;
+	REG_BG3PC_SUB = 0;
+	REG_BG3PD_SUB = 1 << 8;
+	
+	REG_BG3X_SUB = 0;
+	REG_BG3Y_SUB = 0;
+	
 	DC_FlushRange (fondoBitmap, fondoBitmapLen);
+	DC_FlushRange (fondo2Bitmap, fondo2BitmapLen);
 	
 	/* Empezar la copia de los fondos */
 	dmaCopy (fondoBitmap, BG_BMP_RAM (0), fondoBitmapLen);
+	dmaCopy (fondo2Bitmap, BG_BMP_RAM_SUB(16), fondo2BitmapLen);
 	
-	while (1) {
-		
-	}
 	return 0;
 }
