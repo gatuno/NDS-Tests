@@ -50,7 +50,7 @@ int main () {
 	REG_BG3Y = 0;
 	
 	REG_BG3CNT_SUB = BG_BMP16_256x256 |
-	                 BG_BMP_BASE (16) |
+	                 BG_BMP_BASE (0) |
 	                 BG_PRIORITY (3);
 	
 	REG_BG3PA_SUB = 1 << 8;
@@ -66,7 +66,10 @@ int main () {
 	
 	/* Empezar la copia de los fondos */
 	dmaCopy (fondoBitmap, BG_BMP_RAM (0), fondoBitmapLen);
-	dmaCopy (fondo2Bitmap, BG_BMP_RAM_SUB(16), fondo2BitmapLen);
+	dmaCopy (fondo2Bitmap, BG_BMP_RAM_SUB(0), fondo2BitmapLen);
 	
+	while (1) {
+		
+	}
 	return 0;
 }
